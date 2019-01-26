@@ -1,6 +1,6 @@
 # Flask Unsign
-Command line tool to fetch, decode, brute-force and craft session cookies of a 
-Flask  application by guessing secret keys.
+Command line tool to fetch, decode, brute-force and craft session cookies of a Flask  application by guessing secret keys.
+For the standalone wordlist component, please visit the [flask-unsign-wordlist](https://github.com/Paradoxis/Flask-Unsign-Wordlist) repository.
 
 ## Installation
 To install the application, simply use pip:
