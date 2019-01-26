@@ -1,4 +1,8 @@
 # Flask Unsign
+[![Build Status](https://travis-ci.org/Paradoxis/Flask-Unsign.svg?branch=master)](https://travis-ci.org/Paradoxis/Flask-Unsign)
+[![PyPI version](https://badge.fury.io/py/flask-unsign.svg)](https://badge.fury.io/py/flask-unsign)
+[![codecov](https://codecov.io/gh/Paradoxis/Flask-Unsign/branch/master/graph/badge.svg)](https://codecov.io/gh/Paradoxis/Flask-Unsign)
+
 Command line tool to fetch, decode, brute-force and craft session cookies of a Flask  application by guessing secret keys.
 For the standalone wordlist component, please visit the [flask-unsign-wordlist](https://github.com/Paradoxis/Flask-Unsign-Wordlist) repository.
 
