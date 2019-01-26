@@ -1,0 +1,12 @@
+[report]
+omit =
+    tests/*
+    venv/*
+exclude_lines =
+    def __repr__
+    if __name__ == .__main__.:
+    except ImportError.
+    except KeyboardInterrupt.
+
+[run]
+source=flask_unsign
