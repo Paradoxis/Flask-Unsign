@@ -7,7 +7,7 @@ python:
   - "3.7"
 
 install:
-  - pip install .[test]
+  - pip install .[test,wordlist]
 
 script:
   - coverage run -m unittest tests --quiet
