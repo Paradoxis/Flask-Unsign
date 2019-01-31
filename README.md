@@ -104,8 +104,8 @@ eyJsb2dnZWRfaW4iOnRydWV9.XDuW-g.cPCkFmmeB7qNIcN-ReiN72r0hvU
 
 ## How it works
 If you're wondering how exactly this works, refer to my 
-[blog post](https://blog.paradoxis.nl/) which explains this in great detail, 
-including a guide on how to protect your own server from this attack.
+[blog post](https://blog.paradoxis.nl/defeating-flasks-session-management-65706ba9d3ce) 
+which explains this in great detail, including a guide on how to protect your own server from this attack.
 
 ## License
 MIT License
