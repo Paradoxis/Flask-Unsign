@@ -6,23 +6,26 @@
 Command line tool to fetch, decode, brute-force and craft session cookies of a Flask  application by guessing secret keys.
 For the standalone wordlist component, please visit the [flask-unsign-wordlist](https://github.com/Paradoxis/Flask-Unsign-Wordlist) repository.
 
+## Requirements
+* Python 3.6
+
 ## Installation
 To install the application, simply use pip:
 
 ```
-$ pip install flask-unsign[wordlist]
+$ pip3 install flask-unsign[wordlist]
 ```
 
 If you only want to install the core code, omit the `[wordlist]` suffix:
 
 ``` 
-$ pip install flask-unsign
+$ pip3 install flask-unsign
 ```
 
 To install the tool for development purposes, run the following command (after downloading a copy):
 
 ```
-$ pip install -e .[test]
+$ pip3 install -e .[test]
 ```
 
 ## Usage
@@ -87,6 +90,9 @@ eyJsb2dnZWRfaW4iOnRydWV9.XDuW-g.cPCkFmmeB7qNIcN-ReiN72r0hvU
 
 ## Troubleshooting
 
+* **Installing the program results in an error**
+    * You might be using the wrong `pip` binary, try using
+      the following command: `python3.6 -m pip install flask-unsign`
 * **I found a secret key, but my crafted sessions don't work!**
     * It might be possible that your target server uses an older version of 
       [itsdangerous](https://github.com/pallets/itsdangerous). Due to 
