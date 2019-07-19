@@ -15,7 +15,7 @@ from requests.exceptions import ProxyError
 from urllib3.exceptions import MaxRetryError
 
 import flask_unsign
-from flask_unsign import __main__ as cli, logger
+from flask_unsign import __main__ as cli, logger, __version__
 from flask_unsign.helpers import wordlist
 
 
@@ -128,6 +128,14 @@ class CliTestCase(TestCaseBase):
         """Ensure a default help message when none of the operators are used"""
         stdout, stderr = self.call()
         self.assertIn('Copyright', stderr.read())
+
+    def test_version_argument(self):
+        """Ensure that the current version number is printed correctly"""
+        stdout, stderr = self.call('-v')
+        self.assertEqual(stdout.read().strip(), __version__)
+
+        stdout, stderr = self.call('--version')
+        self.assertEqual(stdout.read().strip(), __version__)
 
     def test_cookie_argument(self):
         """Ensure that cookie can be passed as an argument"""

@@ -10,7 +10,7 @@ from flask_unsign.helpers import CustomHelpFormatter, wordlist, parse, extract_e
 from flask_unsign import (
     DecodeError,
     logger, session,
-    __url__, __author__,
+    __url__, __author__, __version__,
     DEFAULT_WORDLIST, DEFAULT_SALT,
     DEFAULT_NAME, DEFAULT_AGENT)
 
@@ -110,7 +110,14 @@ def main() -> Optional[int]:
         'output is logged to stderr, so you could extract all usable output by '
         'redirecting it with > in bash.'))
 
+    parser.add_argument('-v', '--version', action='store_true', help=(
+        'Prints the current version number to stdout and exits.'))
+
     args = parser.parse_args()
+
+    if args.version:
+        print(__version__)
+        return 0
 
     if not args.sign and not args.unsign and not args.decode:
         logger.write(f'Flask-Unsign - ({__url__})')
