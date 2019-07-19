@@ -10,7 +10,7 @@ from datetime import datetime
 from itsdangerous import TimestampSigner
 from requests import RequestException
 
-from flask_unsign import logger
+from flask_unsign import logger, FlaskUnsignException
 
 
 class CustomHelpFormatter(HelpFormatter):
@@ -76,7 +76,13 @@ def handle_interrupt(func):
     def wrapper():
         try:
             return func() or 0
+
         except KeyboardInterrupt:
             logger.write('\b\b[!] Aborted.', stream=sys.stderr)
             return 1
+
+        except FlaskUnsignException as e:
+            logger.write(f'[!] {e}', stream=sys.stderr)
+            return 1
+
     return wrapper

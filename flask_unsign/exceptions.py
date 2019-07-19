@@ -4,3 +4,7 @@ class FlaskUnsignException(Exception):
 
 class DecodeError(FlaskUnsignException):
     """Raised when the application failed to decode a given cookie."""
+
+
+class SigningError(FlaskUnsignException):
+    """Raised whe signing the data fails"""

@@ -3,6 +3,7 @@ import json
 import zlib
 from base64 import b64decode
 from functools import lru_cache
+from typing import Union, AnyStr
 from uuid import UUID
 
 from flask.json.tag import TaggedJSONSerializer
@@ -11,6 +12,7 @@ from markupsafe import Markup
 from werkzeug.http import parse_date
 
 from flask_unsign import DecodeError, DEFAULT_SALT
+from flask_unsign.exceptions import SigningError
 from flask_unsign.helpers import LegacyTimestampSigner
 
 
@@ -31,7 +33,7 @@ def verify(value: str, secret: str, legacy: bool=False, salt: str=DEFAULT_SALT) 
     return True
 
 
-def sign(value: dict, secret: str, legacy: bool=False, salt: str=DEFAULT_SALT) -> str:
+def sign(value: dict, secret: AnyStr, legacy: bool = False, salt: str = DEFAULT_SALT) -> str:
     """
     Signs a custom session value with a known secret
     :param value: Raw Python object (generally a dictionary) to serialize
@@ -40,6 +42,12 @@ def sign(value: dict, secret: str, legacy: bool=False, salt: str=DEFAULT_SALT) -
     :param legacy: Should the legacy timestamp generator be used?
     :return: Encoded string
     """
+    if not isinstance(secret, (bytes, str)):
+        raise SigningError(
+            f"Secret must be a string-type (bytes, str) and received "
+            f"{type(secret).__name__!r}. To fix this, either add quotes to the "
+            f"secret {secret!r} or use the --no-literal-eval argument.")
+
     return get_serializer(secret, legacy, salt).dumps(value)
 
 

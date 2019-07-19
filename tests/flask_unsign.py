@@ -220,6 +220,10 @@ class CliTestCase(TestCaseBase):
         stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', self.secret)
         self.assertTrue(flask_unsign.verify(stdout.read().strip(), secret=self.secret))
 
+        stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', '12345')
+        self.assertNotEqual(stderr.read(), '', msg=(
+            'Expected an error when a non-string type is passed to sign'))
+
         stdout, stderr = self.call('--sign', '--cookie', str(self.decoded))
         self.assertIn('--secret', stderr.read())
 

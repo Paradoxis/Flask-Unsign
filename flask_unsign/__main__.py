@@ -6,7 +6,11 @@ from typing import Optional
 import requests
 
 from flask_unsign.cracker import Cracker
-from flask_unsign.helpers import CustomHelpFormatter, wordlist, parse, extract_error, handle_interrupt
+
+from flask_unsign.helpers import (
+    CustomHelpFormatter, wordlist, parse,
+    extract_error, handle_interrupt)
+
 from flask_unsign import (
     DecodeError,
     logger, session,
@@ -195,10 +199,7 @@ def main() -> Optional[int]:
                 f'http(s) url to automatically fetch the session cookie from. '
                 f'One of "--server" or "--cookie" must be supplied.')
 
-        try:
-            logger.info(f'Session decodes to: {session.decode(args.cookie)}')
-        except DecodeError as e:
-            return logger.error(e)
+        logger.info(f'Session decodes to: {session.decode(args.cookie)}')
 
         if not args.wordlist and not DEFAULT_WORDLIST:
             return logger.error(
@@ -232,3 +233,4 @@ def main() -> Optional[int]:
 
 if __name__ == '__main__':
     exit(main() or 0)
+
