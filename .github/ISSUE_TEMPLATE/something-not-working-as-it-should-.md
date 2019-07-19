@@ -37,7 +37,10 @@ Please add the output of the following commands:
 
 ### Flask-Unsign Version
 ```
-$  pip3 freeze | grep -i flask-unsign
+$ pip3 freeze | grep -i flask-unsign
+...
+
+$ flask-unsign --version
 ...
 ```
 
