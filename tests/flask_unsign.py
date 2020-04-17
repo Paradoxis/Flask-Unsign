@@ -15,7 +15,7 @@ from requests.exceptions import ProxyError
 from urllib3.exceptions import MaxRetryError
 
 import flask_unsign
-from flask_unsign import __main__ as cli, logger, __version__
+from flask_unsign import __main__ as cli, logger, __version__, FlaskUnsignException
 from flask_unsign.helpers import wordlist
 
 
@@ -104,6 +104,10 @@ class FlaskUnsignTestCase(TestCaseBase):
             cracker = flask_unsign.Cracker(value=legacy, legacy=True)
             cracker.crack(iterable)
             self.assertEqual(cracker.secret, self.secret)
+
+    def test_verify(self):
+        with self.assertRaises(FlaskUnsignException):
+            flask_unsign.verify(value='', secret=[], legacy=False)
 
 
 class CliTestCase(TestCaseBase):
@@ -294,3 +298,4 @@ class CliTestCase(TestCaseBase):
                 '--cookie', self.encoded)
 
             self.assertIn('No wordlist selected, nor was a default wordlist found', stderr.read())
+

@@ -12,7 +12,7 @@ from markupsafe import Markup
 from werkzeug.http import parse_date
 
 from flask_unsign import DecodeError, DEFAULT_SALT
-from flask_unsign.exceptions import SigningError
+from flask_unsign.exceptions import SigningError, FlaskUnsignException
 from flask_unsign.helpers import LegacyTimestampSigner
 
 
@@ -25,6 +25,12 @@ def verify(value: str, secret: str, legacy: bool=False, salt: str=DEFAULT_SALT) 
     :param legacy: Should the legacy timestamp generator be used?
     :return: True if the secret key is valid
     """
+    if not isinstance(secret, (bytes, str)):
+        raise FlaskUnsignException(
+            f"Secret must be a string-type (bytes, str) and received "
+            f"{type(secret).__name__!r}. To fix this, either add quotes to the "
+            f"secret {secret!r} or use the --no-literal-eval argument.")
+
     try:
         get_serializer(secret, legacy, salt).loads(value)
     except BadSignature:
