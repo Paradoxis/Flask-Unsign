@@ -9,6 +9,7 @@ from datetime import datetime
 
 from itsdangerous import TimestampSigner
 from requests import RequestException
+from typing import Union
 
 from flask_unsign import logger, FlaskUnsignException
 
@@ -43,22 +44,26 @@ class LegacyTimestampSigner(TimestampSigner):
 
 
 # noinspection PyUnreachableCode
-def parse(line: str):
+def parse(line: Union[str, bytes]):
     with suppress(SyntaxError, ValueError):
         with warnings.catch_warnings():
             warnings.simplefilter('ignore')
-            return literal_eval((line or '').strip())
+
+            if isinstance(line, bytes):
+                line = line.decode()
+
+            return literal_eval((line.strip() or '').strip())
 
     return line.strip()
 
 
 @contextmanager
 def wordlist(path: str, *, parse_lines: bool=True):
-    with open(path, encoding='utf-8') as file:
+    with open(path, 'rb') as file:
         if parse_lines:
             yield map(parse, file)
         else:
-            yield map(str.strip, file)
+            yield map(bytes.strip, file)
 
 
 def extract_error(error: RequestException) -> str:

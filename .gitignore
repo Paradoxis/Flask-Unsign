@@ -7,3 +7,5 @@ temp/
 *.egg-info/
 .coverage
 .DS_Store
+rockyou*
+cookie.txt

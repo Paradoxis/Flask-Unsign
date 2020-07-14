@@ -299,3 +299,17 @@ class CliTestCase(TestCaseBase):
 
             self.assertIn('No wordlist selected, nor was a default wordlist found', stderr.read())
 
+    def test_error_handler(self):
+        with patch.object(cli.Cracker, 'unsign', side_effect=ValueError('oops!')):
+            stdout, stderr = self.call(
+                '--unsign',
+                '--cookie', self.encoded)
+
+            self.assertIn('Error', stderr.read(), msg='Expected error message to be in stderr')
+
+        with patch.object(cli.Cracker, 'unsign', side_effect=ValueError('I/O operation on closed file')):
+            stdout, stderr = self.call(
+                '--unsign',
+                '--cookie', self.encoded)
+
+            self.assertIn('Aborted', stderr.read(), msg='Expected abort message')

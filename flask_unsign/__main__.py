@@ -114,6 +114,11 @@ def main() -> Optional[int]:
         'output is logged to stderr, so you could extract all usable output by '
         'redirecting it with > in bash.'))
 
+    parser.add_argument('-C', '--chunk-size', type=int, default=128, help=(
+        'Number of passwords loaded into memory per thread cycle. After each '
+        'password of the chunk has been depleted a status update will be '
+        'printed to the console with the attempted password. Default: 128'))
+
     parser.add_argument('-v', '--version', action='store_true', help=(
         'Prints the current version number to stdout and exits.'))
 
@@ -216,7 +221,9 @@ def main() -> Optional[int]:
             value=args.cookie,
             legacy=args.legacy,
             salt=args.salt,
-            threads=args.threads)
+            threads=args.threads,
+            chunk_size=args.chunk_size,
+            quiet=args.quiet)
 
         with wordlist(args.wordlist, parse_lines=(not args.no_literal_eval)) as iterator:
             logger.info(f'Starting brute-forcer with {args.threads} threads..')
