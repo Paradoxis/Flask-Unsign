@@ -7,7 +7,7 @@ Command line tool to fetch, decode, brute-force and craft session cookies of a F
 For the standalone wordlist component, please visit the [flask-unsign-wordlist](https://github.com/Paradoxis/Flask-Unsign-Wordlist) repository.
 
 ## Requirements
-* Python 3.6
+* Python 3.6+
 
 ## Installation
 To install the application, simply use pip:
