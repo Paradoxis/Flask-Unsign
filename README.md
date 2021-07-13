@@ -1,5 +1,5 @@
 # Flask Unsign
-[![Build Status](https://travis-ci.org/Paradoxis/Flask-Unsign.svg?branch=master)](https://travis-ci.org/Paradoxis/Flask-Unsign)
+[![Build Status](https://travis-ci.com/Paradoxis/Flask-Unsign.svg?branch=master)](https://travis-ci.com/Paradoxis/Flask-Unsign)
 [![PyPI version](https://badge.fury.io/py/flask-unsign.svg)](https://badge.fury.io/py/flask-unsign)
 [![codecov](https://codecov.io/gh/Paradoxis/Flask-Unsign/branch/master/graph/badge.svg)](https://codecov.io/gh/Paradoxis/Flask-Unsign)
 
@@ -116,7 +116,7 @@ which explains this in great detail, including a guide on how to protect your ow
 ## License
 MIT License
 
-Copyright (c) 2019 Luke Paris (Paradoxis)
+Copyright (c) 2021 Luke Paris (Paradoxis)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
