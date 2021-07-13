@@ -3,7 +3,7 @@ from os import unlink
 from io import StringIO
 from uuid import UUID
 from base64 import b64encode
-from datetime import datetime
+from datetime import datetime, timezone
 from importlib import reload
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
@@ -64,7 +64,7 @@ class FlaskUnsignTestCase(TestCaseBase):
         'hello': 'world',
         'tuple': ('bar', 'baz'),
         'base64': b64encode(b'Hello world'),
-        'datetime': datetime.now().replace(microsecond=0),
+        'datetime': datetime.now(tz=timezone.utc).replace(microsecond=0),
         'uuid': UUID(bytes=b'x' * 16),
         'markup': Markup('<script>alert("evil")</script>'),
         'dict': {'hello': 'world'}
@@ -197,6 +197,18 @@ class CliTestCase(TestCaseBase):
             '--proxy', 'https://root:password@localhost:8080')
 
         self.assertIn('Tunnel connection failed', stderr.read().strip())
+        self.assertTrue(requests.verify, msg='Verify should be true by default')
+
+        for flag in ('-i', '-k', '--insecure'):
+            requests.verify = True
+
+            self.call(
+                '--decode',
+                '--server', 'http://localhost:5000',
+                flag)
+
+            self.assertFalse(requests.verify, msg=(
+                f'Verify should be set to False if called with the {flag} flag'))
 
     def test_decode(self):
         """Ensure --decode works as expected"""

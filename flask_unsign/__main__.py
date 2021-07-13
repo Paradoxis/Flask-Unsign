@@ -93,6 +93,11 @@ def main() -> Optional[int]:
         'In order for this to work, you\'ll have to specify an url which '
         'returns a "Set-Cookie" header.'))
 
+    parser.add_argument('--insecure', '-i', '-k', help=(
+        'By default, all SSL connections are verified to be secure to prevent '
+        'man-in-the-middle attacks. This option disables TLS/SSL certificate '
+        'verification entirely.'), action='store_true', default=False)
+
     parser.add_argument('-p', '--proxy', help=(
         'Specifies an HTTP(S) proxy to connect to before firing the request. '
         'Useful for making requests for a service behind a firewall.'))
@@ -144,6 +149,11 @@ def main() -> Optional[int]:
 
     if args.server:
         sess = requests.session()
+        sess.verify = not args.insecure
+
+        if args.insecure:
+            from requests.packages.urllib3.exceptions import InsecureRequestWarning
+            requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
         try:
             resp = sess.get(args.server, headers={
