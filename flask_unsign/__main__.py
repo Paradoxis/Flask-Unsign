@@ -12,7 +12,6 @@ from flask_unsign.helpers import (
     extract_error, handle_interrupt)
 
 from flask_unsign import (
-    DecodeError,
     logger, session,
     __url__, __author__, __version__,
     DEFAULT_WORDLIST, DEFAULT_SALT,
@@ -97,6 +96,11 @@ def main() -> Optional[int]:
         'By default, all SSL connections are verified to be secure to prevent '
         'man-in-the-middle attacks. This option disables TLS/SSL certificate '
         'verification entirely.'), action='store_true', default=False)
+
+    parser.add_argument('-o', '--output', help=(
+        'Writes all secrets to the specified file. Note that the secret will be '
+        'quoted by default. If you don\'t want this, use this flag in '
+        'combination with the "-oR/--output-raw" flag. '))
 
     parser.add_argument('-p', '--proxy', help=(
         'Specifies an HTTP(S) proxy to connect to before firing the request. '
@@ -241,7 +245,12 @@ def main() -> Optional[int]:
 
         if cracker.secret:
             logger.success(f'Found secret key after {cracker.attempts} attempts')
-            logger.write(ascii(cracker.secret), stream=sys.stdout)
+            if not args.output:
+                logger.write(ascii(cracker.secret), stream=sys.stdout)
+            else:
+                with open(args.output, 'w') as fd:
+                    fd.write(ascii(cracker.secret))
+
         else:
             return logger.error(
                 f'Failed to find secret key after '

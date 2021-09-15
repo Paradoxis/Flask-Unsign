@@ -1,6 +1,8 @@
+import os
 import sys
 from os import unlink
 from io import StringIO
+from os.path import dirname, join, isfile
 from uuid import UUID
 from base64 import b64encode
 from datetime import datetime, timezone
@@ -26,10 +28,18 @@ INDEX_KWARGS = 2
 
 class TestCaseBase(TestCase):
     wordlist = None
+    output_file = join(dirname(__file__), '..', 'secret.txt')
 
     def setUp(self):
         reload(cli)
         reload(logger)
+
+        with suppress(FileNotFoundError):
+            os.remove(self.output_file)
+
+    def tearDown(self) -> None:
+        with suppress(FileNotFoundError):
+            os.remove(self.output_file)
 
     @classmethod
     def setUpClass(cls):
@@ -232,6 +242,16 @@ class CliTestCase(TestCaseBase):
         self.assertEqual(stdout.read().strip(), ascii(self.secret))
         self.assertEqual(stderr.read(), '')
 
+        stdout, stderr = self.call(
+            '--unsign', '--cookie', self.encoded,
+            '--quiet', '--output', self.output_file)
+        self.assertEqual(stdout.read().strip(), '')
+        self.assertEqual(stderr.read(), '')
+
+        self.assertTrue(isfile(self.output_file))
+        with open(self.output_file) as out:
+            self.assertEqual(out.read().strip(), ascii(self.secret))
+
     def test_sign(self):
         stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', self.secret)
         self.assertTrue(flask_unsign.verify(stdout.read().strip(), secret=self.secret))
@@ -273,6 +293,16 @@ class CliTestCase(TestCaseBase):
         stdout, stderr = self.call('--unsign', '--cookie', 'x' * 50)
         self.assertIn('Failed to decode cookie', stderr.read())
         self.assertEqual(stdout.read(), '')
+
+        stdout, stderr = self.call(
+            '--unsign', '--cookie', self.encoded,
+            '--output', self.output_file)
+        self.assertEqual(stdout.read().strip(), '')
+        self.assertNotEqual(stderr.read(), '')
+
+        self.assertTrue(isfile(self.output_file))
+        with open(self.output_file) as out:
+            self.assertEqual(out.read().strip(), ascii(self.secret))
 
     def test_no_literal_eval(self):
         with patch.object(flask_unsign.session, 'sign') as sign:
