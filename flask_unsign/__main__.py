@@ -9,7 +9,7 @@ from flask_unsign.cracker import Cracker
 
 from flask_unsign.helpers import (
     CustomHelpFormatter, wordlist, parse,
-    extract_error, handle_interrupt)
+    extract_error, handle_interrupt, fix_stdout)
 
 from flask_unsign import (
     logger, session,
@@ -19,6 +19,7 @@ from flask_unsign import (
 
 
 @handle_interrupt
+@fix_stdout
 def main() -> Optional[int]:
     """
     Main entry point of the application
@@ -98,9 +99,7 @@ def main() -> Optional[int]:
         'verification entirely.'), action='store_true', default=False)
 
     parser.add_argument('-o', '--output', help=(
-        'Writes all secrets to the specified file. Note that the secret will be '
-        'quoted by default. If you don\'t want this, use this flag in '
-        'combination with the "-oR/--output-raw" flag. '))
+        'Writes all stdout to the specified file.'))
 
     parser.add_argument('-p', '--proxy', help=(
         'Specifies an HTTP(S) proxy to connect to before firing the request. '
@@ -132,6 +131,9 @@ def main() -> Optional[int]:
         'Prints the current version number to stdout and exits.'))
 
     args = parser.parse_args()
+
+    if args.output:
+        sys.stdout = open(args.output, 'w')  # gets handled by `fix_stdout`
 
     if args.version:
         print(__version__)
@@ -245,11 +247,7 @@ def main() -> Optional[int]:
 
         if cracker.secret:
             logger.success(f'Found secret key after {cracker.attempts} attempts')
-            if not args.output:
-                logger.write(ascii(cracker.secret), stream=sys.stdout)
-            else:
-                with open(args.output, 'w') as fd:
-                    fd.write(ascii(cracker.secret))
+            logger.write(ascii(cracker.secret), stream=sys.stdout)
 
         else:
             return logger.error(

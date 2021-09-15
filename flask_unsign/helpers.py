@@ -6,6 +6,7 @@ from calendar import EPOCH
 from contextlib import suppress, contextmanager
 from ast import literal_eval
 from datetime import datetime
+from functools import wraps
 
 from itsdangerous import TimestampSigner
 from requests import RequestException
@@ -78,6 +79,7 @@ def extract_error(error: RequestException) -> str:
 
 def handle_interrupt(func):
     """Decorator which ensures that keyboard interrupts are handled properly."""
+    @wraps(func)
     def wrapper():
         try:
             return func() or 0
@@ -90,4 +92,20 @@ def handle_interrupt(func):
             logger.write(f'[!] {e}', stream=sys.stderr)
             return 1
 
+    return wrapper
+
+
+def fix_stdout(func):
+    """Decorator which ensures stdout is put back in place after run"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        stdout = sys.stdout
+        try:
+            return func(*args, **kwargs)
+        finally:
+            if sys.stdout is not stdout:
+                try:
+                    sys.stdout.close()
+                finally:
+                    sys.stdout = stdout
     return wrapper

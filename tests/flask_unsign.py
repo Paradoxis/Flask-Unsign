@@ -151,6 +151,11 @@ class CliTestCase(TestCaseBase):
         stdout, stderr = self.call('--version')
         self.assertEqual(stdout.read().strip(), __version__)
 
+        stdout, stderr = self.call('--version', '--output', self.output_file)
+        self.assertEqual(stdout.read().strip(), '')
+        with open(self.output_file) as out:
+            self.assertEqual(out.read().strip(), __version__)
+
     def test_cookie_argument(self):
         """Ensure that cookie can be passed as an argument"""
         stdout, stderr = self.call('--decode', '--cookie', self.encoded)
@@ -225,6 +230,13 @@ class CliTestCase(TestCaseBase):
         stdout, stderr = self.call('--decode', '--cookie', self.encoded)
         self.assertEqual(stdout.read().strip(), str(self.decoded))
 
+        stdout, stderr = self.call(
+            '--decode', '--cookie', self.encoded,
+            '--output', self.output_file)
+        self.assertEqual(stdout.read().strip(), '', )
+        with open(self.output_file) as out:
+            self.assertEqual(out.read().strip(), str(self.decoded))
+
         stdout, stderr = self.call('--decode')
         self.assertIn('--cookie', stderr.read())
 
@@ -255,6 +267,14 @@ class CliTestCase(TestCaseBase):
     def test_sign(self):
         stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', self.secret)
         self.assertTrue(flask_unsign.verify(stdout.read().strip(), secret=self.secret))
+
+        stdout, stderr = self.call(
+            '--sign', '--cookie', str(self.decoded),
+            '--secret', self.secret,
+            '--output', self.output_file)
+        self.assertEqual(stdout.read().strip(), '', )
+        with open(self.output_file) as out:
+            self.assertTrue(flask_unsign.verify(out.read().strip(), secret=self.secret))
 
         stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', '12345')
         self.assertNotEqual(stderr.read(), '', msg=(
