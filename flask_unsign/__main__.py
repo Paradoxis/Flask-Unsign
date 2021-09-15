@@ -124,6 +124,9 @@ def main() -> Optional[int]:
         'password of the chunk has been depleted a status update will be '
         'printed to the console with the attempted password. Default: 128'))
 
+    parser.add_argument('-l', '--log', action='store_true', default="log.txt", help=(
+        'Logs Server URL and Secret to Log File.'))   
+  
     parser.add_argument('-v', '--version', action='store_true', help=(
         'Prints the current version number to stdout and exits.'))
 
@@ -242,6 +245,11 @@ def main() -> Optional[int]:
         if cracker.secret:
             logger.success(f'Found secret key after {cracker.attempts} attempts')
             logger.write(ascii(cracker.secret), stream=sys.stdout)
+            if args.log:
+               if args.server:
+                  text_file = open(args.log, "a")
+				  text_file.write("Server: "+args.server+" - Key:"+cracker.secret+"\n")
+				  text_file.close()
         else:
             return logger.error(
                 f'Failed to find secret key after '
