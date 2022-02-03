@@ -13,7 +13,7 @@ For the standalone wordlist component, please visit the [flask-unsign-wordlist](
 To install the application, simply use pip:
 
 ```
-$ pip3 install flask-unsign[wordlist]
+$ pip3 install flask-unsign
 ```
 
 If you only want to install the core code, omit the `[wordlist]` suffix:
