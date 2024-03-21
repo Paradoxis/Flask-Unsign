@@ -28,6 +28,12 @@ To install the tool for development purposes, run the following command (after d
 $ pip3 install -e .[test]
 ```
 
+To install the tool on [BlackArch Linux](https://blackarch.org/):
+
+```bash
+pacman -S flask-unsign
+```
+
 ## Usage
 
 To get an overview of all possible options, simply call flask-unsign without 
