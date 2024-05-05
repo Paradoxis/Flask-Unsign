@@ -79,7 +79,7 @@ class Cracker:
 
                 print((
                     f"[*] Attempted ({self.attempts}): "
-                    f"{secret[0:30].decode('ascii', errors='ignore').ljust(30, ' ')}".strip()
+                    f"{secret[0:30].decode('ascii', errors='ignore').ljust(30, ' ')}"
                 ), end='\r', flush=True, file=sys.stderr)
 
             self.lock.release()
