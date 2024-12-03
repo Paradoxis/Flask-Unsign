@@ -184,7 +184,7 @@ def main() -> Optional[int]:
         args.cookie = sys.stdin.read().strip()
 
     if args.sign:
-        if not args.secret:
+        if not type(args.secret) is str:
             return logger.error('Missing required parameter "--secret".')
 
         if not args.cookie:
