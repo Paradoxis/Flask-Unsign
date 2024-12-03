@@ -1,6 +1,6 @@
 # Metadata
 # =============================================================================
-__version__ = '1.2.0'
+__version__ = '1.2.1'
 __url__ = 'https://github.com/Paradoxis/Flask-Unsign'
 __author__ = 'Luke Paris (Paradoxis)'
 
