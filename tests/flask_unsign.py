@@ -121,6 +121,7 @@ class FlaskUnsignTestCase(TestCaseBase):
 
 
 class CliTestCase(TestCaseBase):
+    encoded_with_empty_secret = 'eyJoZWxsbyI6IndvcmxkIn0.Z09y_A.ch5Bsa496msERXG0XzzjyKQBYVE'
     encoded = 'eyJoZWxsbyI6IndvcmxkIn0.XDtqeQ.1qsBdjyRJLokwRzJdzXMVCSyRTA'
     decoded = {'hello': 'world'}
     secret = 'CHANGEME'
@@ -285,6 +286,12 @@ class CliTestCase(TestCaseBase):
 
         stdout, stderr = self.call('--sign', '--secret', self.secret)
         self.assertIn('--cookie', stderr.read())
+
+    def test_empty_secret(self):
+        stdout, stderr = self.call('--sign', '--cookie', str(self.decoded), '--secret', '')
+        stdout = stdout.read().strip()
+        self.assertIn(self.encoded_with_empty_secret.split('.')[0], stdout, msg='Expected to find encoded secret prefix in stdout')
+        self.assertTrue(flask_unsign.verify(stdout, secret=''), msg='Expected the encoded secret to be valid')
 
     @patch.object(cli.requests, 'session')
     def test_unsign(self, requests):
